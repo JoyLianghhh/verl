@@ -1,0 +1,23 @@
+name: Sync with upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天凌晨同步一次（可调整时间）
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 拉取完整历史
+
+      - name: Sync with upstream
+        uses: repo-sync/github-sync@v2
+        with:
+          source_repo: "https://github.com/volcengine/verl.git"
+          source_branch: "main"  # 原始仓库的目标分支
+          destination_branch: "main"  # 你的仓库要同步的分支
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # 自动生成的 token
